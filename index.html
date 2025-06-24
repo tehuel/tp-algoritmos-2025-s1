@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TP Algoritmos</title>
+    <script src="set-cover-dp.js"></script>
+    <script src="problema.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById("set-cover-form");
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();
+                const numElements = parseInt(document.getElementById("num-elements").value);
+                const numSets = parseInt(document.getElementById("num-sets").value);
+                const minSetSize = parseInt(document.getElementById("min-set-size").value);
+                const maxSetSize = parseInt(document.getElementById("max-set-size").value);
+
+                const { universo, subconjuntos } = generarProblemaSetCover(numElements, numSets, minSetSize, maxSetSize);
+                const solucion = setCoverProgramacionDinamica(subconjuntos, universo);
+
+                document.getElementById("output").textContent = JSON.stringify({ universo, subconjuntos, solucion });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>Configuración de Generación de Problemas de Set Cover</h1>
+<form id="set-cover-form">
+    <label for="num-elements">Cantidad de elementos en el universo:</label>
+    <input type="number" id="num-elements" name="num-elements" min="1" required value="6"><br><br>
+
+    <label for="num-sets">Cantidad de subconjuntos:</label>
+    <input type="number" id="num-sets" name="num-sets" min="1" required value="5"><br><br>
+
+    <label for="min-set-size">Tamaño mínimo de subconjunto:</label>
+    <input type="number" id="min-set-size" name="min-set-size" min="1" required value="2"><br><br>
+
+    <label for="max-set-size">Tamaño máximo de subconjunto:</label>
+    <input type="number" id="max-set-size" name="max-set-size" min="1" required value="3"><br><br>
+
+    <button type="submit">Generar Problema</button>
+</form>
+<pre id="output"></pre>
+    
+</body>
+</html>
