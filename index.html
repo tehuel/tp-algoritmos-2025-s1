@@ -11,12 +11,20 @@
             const form = document.getElementById("set-cover-form");
             form.addEventListener("submit", function(event) {
                 event.preventDefault();
-                const numElements = parseInt(document.getElementById("num-elements").value);
-                const numSets = parseInt(document.getElementById("num-sets").value);
-                const minSetSize = parseInt(document.getElementById("min-set-size").value);
-                const maxSetSize = parseInt(document.getElementById("max-set-size").value);
 
-                const { universo, subconjuntos } = generarProblemaSetCover(numElements, numSets, minSetSize, maxSetSize);
+                // Obtener los valores del formulario
+                const {
+                    cantElementos,
+                    cantSubconjuntos,
+                    tamMinSubconjunto,
+                    tamMaxSubconjunto
+                } = Object.fromEntries(
+                    new FormData(form)
+                        .entries()
+                        .map(([key, value]) => [key, parseInt(value)]) // Convertir los valores a enteros
+                );
+
+                const { universo, subconjuntos } = generarProblemaSetCover(cantElementos, cantSubconjuntos, tamMinSubconjunto, tamMaxSubconjunto);
                 const solucion = setCoverProgramacionDinamica(subconjuntos, universo);
 
                 document.getElementById("output").textContent = JSON.stringify({ universo, subconjuntos, solucion });
@@ -27,17 +35,17 @@
 <body>
 <h1>Configuración de Generación de Problemas de Set Cover</h1>
 <form id="set-cover-form">
-    <label for="num-elements">Cantidad de elementos en el universo:</label>
-    <input type="number" id="num-elements" name="num-elements" min="1" required value="6"><br><br>
+        <label for="cantElementos">Cantidad de elementos en el universo:</label>
+        <input type="number" id="cantElementos" name="cantElementos" min="1" required value="6"><br><br>
 
-    <label for="num-sets">Cantidad de subconjuntos:</label>
-    <input type="number" id="num-sets" name="num-sets" min="1" required value="5"><br><br>
+        <label for="cantSubconjuntos">Cantidad de subconjuntos:</label>
+        <input type="number" id="cantSubconjuntos" name="cantSubconjuntos" min="1" required value="5"><br><br>
 
-    <label for="min-set-size">Tamaño mínimo de subconjunto:</label>
-    <input type="number" id="min-set-size" name="min-set-size" min="1" required value="2"><br><br>
+        <label for="tamMinSubconjunto">Tamaño mínimo de subconjunto:</label>
+        <input type="number" id="tamMinSubconjunto" name="tamMinSubconjunto" min="1" required value="2"><br><br>
 
-    <label for="max-set-size">Tamaño máximo de subconjunto:</label>
-    <input type="number" id="max-set-size" name="max-set-size" min="1" required value="3"><br><br>
+        <label for="tamMaxSubconjunto">Tamaño máximo de subconjunto:</label>
+        <input type="number" id="tamMaxSubconjunto" name="tamMaxSubconjunto" min="1" required value="3"><br><br>
 
     <button type="submit">Generar Problema</button>
 </form>
