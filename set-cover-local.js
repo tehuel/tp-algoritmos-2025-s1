@@ -41,5 +41,5 @@ export function setCoverBusquedaLocal (U, sets) {
     }
 
     // Devolver los subconjuntos seleccionados
-    return seleccionados
+    return [ seleccionados ];
 }

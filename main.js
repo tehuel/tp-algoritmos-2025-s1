@@ -13,7 +13,8 @@ function resolver(algoritmo, universo, subconjuntos) {
 
     const salida = {
         tiempo: `${tiempo} ms`,
-        solucion: resultado,
+        len: resultado.map(r => r.filter(Boolean).length),
+        resultado,
         subconjuntos,
         universo,
     };
