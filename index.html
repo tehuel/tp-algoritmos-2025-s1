@@ -1,42 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TP Algoritmos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
     <script src="utils.js" type="module"></script>
     <script src="problema.js" type="module"></script>
     <script src="set-cover-dp.js" type="module"></script>
     <script src="set-cover-local.js" type="module"></script>
     <script src="main.js" type="module"></script>
 </head>
+
 <body>
-<h1>Set Cover</h1>
-<form id="set-cover-form">
-        <label for="algoritmo">Algoritmo</label>
-        <select id="algoritmo" name="algoritmo">
-            <option value="dp">Programación Dinámica</option>
-            <option value="local">Búsqueda Local</option>
-        </select><br><br>
+    <section class="hero">
+        <div class="hero-body">
+            <h1 class="title">Set Cover</h1>
+            <p class="subtitle">Algoritmos de Programación Dinámica y Búsqueda Local</p>
+        </div>
+    </section>
 
-        <label for="cantElementos">Cantidad de elementos en el universo:</label>
-        <input type="number" id="cantElementos" name="cantElementos" min="1" required value="6"><br><br>
+    <section class="section">
+        <form id="set-cover-form">
 
-        <label for="cantSubconjuntos">Cantidad de subconjuntos:</label>
-        <input type="number" id="cantSubconjuntos" name="cantSubconjuntos" min="1" required value="5"><br><br>
+            <div class="field">
+                <label class="label" for="algoritmo">Algoritmo</label>
+                <div class="control">
+                    <div class="select">
+                        <select id="algoritmo" name="algoritmo">
+                            <option value="dp">Programación Dinámica</option>
+                            <option value="local">Búsqueda Local</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-        <label for="tamMinSubconjunto">Tamaño mínimo de subconjunto:</label>
-        <input type="number" id="tamMinSubconjunto" name="tamMinSubconjunto" min="1" required value="2"><br><br>
+            <label class="label" for="cantElementos">Cantidad de elementos en el universo:</label>
+            <input class="input" type="number" id="cantElementos" name="cantElementos" min="1" required value="6">
 
-        <label for="tamMaxSubconjunto">Tamaño máximo de subconjunto:</label>
-        <input type="number" id="tamMaxSubconjunto" name="tamMaxSubconjunto" min="1" required value="3"><br><br>
+            <label class="label" for="cantSubconjuntos">Cantidad de subconjuntos:</label>
+            <input class="input" type="number" id="cantSubconjuntos" name="cantSubconjuntos" min="1" required value="5">
 
-    <button type="submit">Generar Problema</button>
-</form>
+            <label class="label" for="tamMinSubconjunto">Tamaño mínimo de subconjunto:</label>
+            <input class="input" type="number" id="tamMinSubconjunto" name="tamMinSubconjunto" min="1" required
+                value="2">
 
-<button type="button" id="retry">Volver a Resolver</button>
+            <label class="label" for="tamMaxSubconjunto">Tamaño máximo de subconjunto:</label>
+            <input class="input" type="number" id="tamMaxSubconjunto" name="tamMaxSubconjunto" min="1" required
+                value="3">
 
-<pre id="output"></pre>
-    
+            <div class="field is-grouped is-grouped-centered">
+                <p class="control">
+                    <button class="button is-primary" type="submit">Generar Problema</button>
+                </p>
+                <p class="control">
+                    <button class="button" type="button" id="retry">Reintentar</button>
+                </p>
+            </div>
+        </form>
+    </section>
+
+    <pre id="output"></pre>
 </body>
+
 </html>
