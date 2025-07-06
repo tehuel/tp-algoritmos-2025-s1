@@ -2,8 +2,8 @@
 function esUniversoCubierto(seleccionados, sets, U) {
   const elementosCubiertos = new Set();
 
-  seleccionados.forEach((vecesUsado, i) => {
-    if (vecesUsado > 0) sets[i].forEach(e => elementosCubiertos.add(e));
+  seleccionados.forEach((esSeleccionado, i) => {
+    if (esSeleccionado) sets[i].forEach(e => elementosCubiertos.add(e));
   });
 
   const todosCubiertos = U.every(e => elementosCubiertos.has(e));
@@ -12,18 +12,18 @@ function esUniversoCubierto(seleccionados, sets, U) {
 
 // Función para verificar si la solución es mínima
 function esSolucionMinima(seleccionados, sets, U) {
-  // Verificar si hay conjuntos que no son necesarios  
-  for (let i = 0; i < seleccionados.length; i++) {
-    if (seleccionados[i] > 0) {
+  // verificar si todos los conjuntos seleccionados son necesarios
+  return seleccionados.every((esSeleccionado, i) => {
+    if (esSeleccionado) {
       // Probar si al eliminar este conjunto, aún se cubre U
       const nuevaSeleccion = [...seleccionados];
-      nuevaSeleccion[i]--;
+      nuevaSeleccion[i] = false;
       if (esUniversoCubierto(nuevaSeleccion, sets, U)) {
-        return false; // Hay un conjunto redundante
+        return false; // El conjunto no es necesario
       }
     }
-  }
-  return true; // No hay conjuntos redundantes
+    return true; // El conjunto es necesario
+  });
 }
 
 // funcion recursiva para encontrar la solución óptima
@@ -42,7 +42,7 @@ function setCover(index, seleccionados, soluciones, sets, U) {
 
   // Opción 2: Incluir el conjunto actual
   const nuevaListaDeSeleccionados = [...seleccionados];
-  nuevaListaDeSeleccionados[index]++;
+  nuevaListaDeSeleccionados[index] = true;
   const solucionesConConjunto = setCover(index + 1, nuevaListaDeSeleccionados, soluciones, sets, U);
 
   // Combinar todas las soluciones
@@ -51,10 +51,10 @@ function setCover(index, seleccionados, soluciones, sets, U) {
 
 // Función para encontrar la solución óptima usando programación dinámica
 function setCoverProgramacionDinamica(sets, U) {
-  const ningunSeleccionado = Array(sets.length).fill(0);
+  const seleccionadosInicial = Array(sets.length).fill(false);
 
   // Llamar a la función recursiva
-  const resultado = setCover(0, ningunSeleccionado, [], sets, U);
+  const resultado = setCover(0, seleccionadosInicial, [], sets, U);
 
   // Si el resultado es infinito, significa que no se puede cubrir el universo
   return resultado;
