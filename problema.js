@@ -4,7 +4,7 @@ const obtenerEnteroRandom = (min, max) => Math.floor(Math.random() * (max - min 
 
 const obtenerElementoRandom = (array) => array[Math.floor(Math.random() * array.length)];
 
-const generarProblemaSetCover = (
+export const generarProblemaSetCover = (
   cantElementos,
   cantSubconjuntos,
   tamMinSubconjunto,

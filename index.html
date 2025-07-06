@@ -4,44 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TP Algoritmos</title>
-    <script src="set-cover-dp.js"></script>
-    <script src="problema.js"></script>
-    <script src="utils.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const form = document.getElementById("set-cover-form");
-            form.addEventListener("submit", function(event) {
-                event.preventDefault();
-
-                // Obtener los valores del formulario
-                const {
-                    cantElementos,
-                    cantSubconjuntos,
-                    tamMinSubconjunto,
-                    tamMaxSubconjunto
-                } = Object.fromEntries(
-                    new FormData(form)
-                        .entries()
-                        .map(([key, value]) => [key, parseInt(value)]) // Convertir los valores a enteros
-                );
-
-                const { universo, subconjuntos } = generarProblemaSetCover(cantElementos, cantSubconjuntos, tamMinSubconjunto, tamMaxSubconjunto);
-                const {resultado, tiempo} = medirTiempo(setCoverProgramacionDinamica, subconjuntos, universo);
-
-                const salida = {
-                    tiempo: `${tiempo} ms`,
-                    solucion: resultado,
-                    subconjuntos,
-                    universo,
-                };
-                document.getElementById("output").textContent = JSON.stringify(salida, null, 2);
-            });
-        });
-    </script>
+    <script src="utils.js" type="module"></script>
+    <script src="problema.js" type="module"></script>
+    <script src="set-cover-dp.js" type="module"></script>
+    <script src="set-cover-local.js" type="module"></script>
+    <script src="main.js" type="module"></script>
 </head>
 <body>
-<h1>Configuración de Generación de Problemas de Set Cover</h1>
+<h1>Set Cover</h1>
 <form id="set-cover-form">
+        <label for="algoritmo">Algoritmo</label>
+        <select id="algoritmo" name="algoritmo">
+            <option value="dp">Programación Dinámica</option>
+        </select><br><br>
+
         <label for="cantElementos">Cantidad de elementos en el universo:</label>
         <input type="number" id="cantElementos" name="cantElementos" min="1" required value="6"><br><br>
 
