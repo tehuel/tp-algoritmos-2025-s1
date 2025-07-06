@@ -5,37 +5,32 @@ function esUniversoCubierto(seleccionados, sets, U) {
   seleccionados.forEach((vecesUsado, i) => {
     if (vecesUsado > 0) sets[i].forEach(e => elementosCubiertos.add(e));
   });
-  
-  // Verificar si todos los elementos de U están en los cubiertos
-  return U.every(e => elementosCubiertos.has(e));
+
+  const todosCubiertos = U.every(e => elementosCubiertos.has(e));
+  return todosCubiertos;
 }
 
 // funcion recursiva para encontrar la solución óptima
-function setCover(index, seleccionados, sets, U) {
-
-  console.log(`${ '-'.repeat(index) } setCover`, {index, seleccionados});
-
+function setCover(index, seleccionados, soluciones, sets, U) {
   // caso base: si todos los elementos de U están cubiertos
   if (esUniversoCubierto(seleccionados, sets, U)) {
-    // retorna cantidad de conjuntos seleccionados
-    const cantidad = seleccionados.reduce((sum, val) => sum + val, 0);
-    console.log(`${ '-'.repeat(index) } > esUniversoCubierto`, {cantidad, seleccionados});
-    return cantidad;
+    // Devolver una copia de la solución encontrada
+    return [[...seleccionados]];
   }
 
   // caso base: si se han revisado todos los conjuntos
-  if (index >= sets.length) return Infinity;
+  if (index >= sets.length) return [];
 
   // Opción 1: No incluir el conjunto actual
-  const sinIncluir = setCover(index + 1, seleccionados, sets, U);
+  const solucionesSinConjunto = setCover(index + 1, seleccionados, soluciones, sets, U);
 
   // Opción 2: Incluir el conjunto actual
   const nuevaListaDeSeleccionados = [...seleccionados];
   nuevaListaDeSeleccionados[index]++;
-  const conIncluir = setCover(index + 1, nuevaListaDeSeleccionados, sets, U);
+  const solucionesConConjunto = setCover(index + 1, nuevaListaDeSeleccionados, soluciones, sets, U);
 
-  // Retornar el mínimo entre las dos opciones
-  return Math.min(sinIncluir, conIncluir);
+  // Combinar todas las soluciones
+  return [...solucionesSinConjunto, ...solucionesConConjunto];
 }
 
 // Función para encontrar la solución óptima usando programación dinámica
@@ -43,8 +38,8 @@ function setCoverProgramacionDinamica(sets, U) {
   const ningunSeleccionado = Array(sets.length).fill(0);
 
   // Llamar a la función recursiva
-  const resultado = setCover(0, ningunSeleccionado, sets, U);
+  const resultado = setCover(0, ningunSeleccionado, [], sets, U);
 
   // Si el resultado es infinito, significa que no se puede cubrir el universo
-  return resultado === Infinity ? null : resultado;
+  return resultado;
 }
