@@ -42,3 +42,16 @@ Función esSolucionMinima(seleccionados, sets, U):
 ```
 
 Para facilitar pruebas también se construyó un formulario para parametrizar la generación y resolución de nuevos problemas.
+
+## Ejercicio 2: Busqueda Local
+
+Para el ejercicio de busqueda local se implementó una solución simple para intentar minimizar la cantidad de subconjuntos seleccionados para una solución.
+
+Se inicia con una solución válida pero no mínima (todos los subconjuntos seleccionados), y se van deseleccionando subconjuntos de forma aleatoria hasta que no queden subconjuntos que puedan ser eliminados.
+
+Con esto nos aseguramos una solución mínima (no hay subconjuntos innecesarios), pero puede ser que no lleguemos a una solución óptima (la cantidad de subconjuntos seleccionados es la menor posible).
+
+Al formulario de pruebas se le agregó la posibilidad de seleccionar estrategia de resolución, y también la opción para volver a resolver el mismo problema. Antes de esto, cada ejecución creaba y resolvía un nuevo problema, ahora podemos probar correr el mismo problema varias veces para ver si encontramos diferentes soluciones (esto es util dada la aleatoriedad de la seleccion de candidados para eliminar dentro de la busqueda local)
+
+## Ajuste de Parámetros en Búsqueda Local
+
