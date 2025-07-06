@@ -10,10 +10,26 @@ function esUniversoCubierto(seleccionados, sets, U) {
   return todosCubiertos;
 }
 
+// Función para verificar si la solución es mínima
+function esSolucionMinima(seleccionados, sets, U) {
+  // Verificar si hay conjuntos que no son necesarios  
+  for (let i = 0; i < seleccionados.length; i++) {
+    if (seleccionados[i] > 0) {
+      // Probar si al eliminar este conjunto, aún se cubre U
+      const nuevaSeleccion = [...seleccionados];
+      nuevaSeleccion[i]--;
+      if (esUniversoCubierto(nuevaSeleccion, sets, U)) {
+        return false; // Hay un conjunto redundante
+      }
+    }
+  }
+  return true; // No hay conjuntos redundantes
+}
+
 // funcion recursiva para encontrar la solución óptima
 function setCover(index, seleccionados, soluciones, sets, U) {
   // caso base: si todos los elementos de U están cubiertos
-  if (esUniversoCubierto(seleccionados, sets, U)) {
+  if (esUniversoCubierto(seleccionados, sets, U) && esSolucionMinima(seleccionados, sets, U)) {
     // Devolver una copia de la solución encontrada
     return [[...seleccionados]];
   }
