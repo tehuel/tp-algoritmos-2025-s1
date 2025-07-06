@@ -6,6 +6,7 @@
     <title>TP Algoritmos</title>
     <script src="set-cover-dp.js"></script>
     <script src="problema.js"></script>
+    <script src="utils.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const form = document.getElementById("set-cover-form");
@@ -25,9 +26,18 @@
                 );
 
                 const { universo, subconjuntos } = generarProblemaSetCover(cantElementos, cantSubconjuntos, tamMinSubconjunto, tamMaxSubconjunto);
-                const solucion = setCoverProgramacionDinamica(subconjuntos, universo);
+                const {resultado, tiempo} = medirTiempo(setCoverProgramacionDinamica, subconjuntos, universo);
 
-                document.getElementById("output").textContent = JSON.stringify({ universo, subconjuntos, solucion });
+                const salida = {
+                    tiempo: `${tiempo} ms`,
+                    solucion: resultado,
+                    subconjuntos,
+                    universo,
+                };
+
+                console.table(resultado);
+
+                document.getElementById("output").textContent = JSON.stringify(salida, null, 2);
             });
         });
     </script>

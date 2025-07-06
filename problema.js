@@ -1,21 +1,29 @@
-generarArrayUniverso = (n) => Array.from({ length: n }, (_, i) => i + 1);
-obtenerEnteroRandom = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-obtenerElementoRandom = (array) => array[Math.floor(Math.random() * array.length)];
+const generarArrayUniverso = (n) => Array.from({ length: n }, (_, i) => i + 1);
 
-function generarProblemaSetCover(cantElementos, cantSubconjuntos, tamMinSubconjunto, tamMaxSubconjunto) {
-    const problema = {
-        universo: generarArrayUniverso(cantElementos),
-        subconjuntos: []
-    };
+const obtenerEnteroRandom = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-    for (let i = 0; i < cantSubconjuntos; i++) {
-        const tamSubconjunto = obtenerEnteroRandom(tamMinSubconjunto, tamMaxSubconjunto);
-        const elementosSubconjunto = new Set();
-        while (elementosSubconjunto.size < tamSubconjunto) {
-            elementosSubconjunto.add(obtenerElementoRandom(problema.universo));
-        }
-        problema.subconjuntos.push(Array.from(elementosSubconjunto));
+const obtenerElementoRandom = (array) => array[Math.floor(Math.random() * array.length)];
+
+const generarProblemaSetCover = (
+  cantElementos,
+  cantSubconjuntos,
+  tamMinSubconjunto,
+  tamMaxSubconjunto
+) => {
+  const universo = generarArrayUniverso(cantElementos);
+  const subconjuntos = [];
+
+  for (let i = 0; i < cantSubconjuntos; i++) {
+    const tamSubconjunto = obtenerEnteroRandom(tamMinSubconjunto, tamMaxSubconjunto);
+    const elementosSubconjunto = new Set();
+    while (elementosSubconjunto.size < tamSubconjunto) {
+      elementosSubconjunto.add(obtenerElementoRandom(universo));
     }
-    
-    return problema;
+    subconjuntos.push(Array.from(elementosSubconjunto));
+  }
+
+  return {
+    universo,
+    subconjuntos,
+  };
 }
