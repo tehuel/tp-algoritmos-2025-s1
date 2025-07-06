@@ -1,8 +1,8 @@
+import { obtenerElementoRandom  } from "./utils.js";
+
 const generarArrayUniverso = (n) => Array.from({ length: n }, (_, i) => i + 1);
 
 const obtenerEnteroRandom = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-const obtenerElementoRandom = (array) => array[Math.floor(Math.random() * array.length)];
 
 export const generarProblemaSetCover = (
   cantElementos,
