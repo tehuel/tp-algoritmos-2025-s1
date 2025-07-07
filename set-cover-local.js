@@ -6,7 +6,6 @@ export function setCoverBusquedaLocal (U, sets) {
 
     // candidatos a eliminar: todos los subconjuntos
     let candidatos = mezclarArray(sets.map((_, index) => index));
-    console.log("Candidatos iniciales:", candidatos, seleccionados);
 
     // Mientras haya mejoras
     let mejorado = true;
@@ -16,12 +15,9 @@ export function setCoverBusquedaLocal (U, sets) {
         // Buscar un subconjunto que se pueda eliminar
         while (candidatos.length) {
             const indice = candidatos.pop();
-            console.log("Probando eliminar el subconjunto en el índice:", JSON.stringify({ indice, subconjunto: sets[indice], seleccionados }));
-            console.log("es necesario?", esSubconjuntoNecesario(indice, seleccionados, sets, U));
             if (!esSubconjuntoNecesario(indice, seleccionados, sets, U)) {
                 // Si el subconjunto no es necesario, eliminarlo
                 seleccionados[indice] = false;
-                console.log("Eliminado el subconjunto en el índice:", indice);
                 mejorado = true;
                 break; // Salir del bucle para reiniciar la búsqueda
             }
