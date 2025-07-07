@@ -28,8 +28,5 @@ export function setCoverProgramacionDinamica(U, sets) {
   const seleccionadosInicial = Array(sets.length).fill(false);
 
   // Llamar a la función recursiva
-  const resultado = setCover(0, seleccionadosInicial, [], sets, U);
-
-  // Si el resultado es infinito, significa que no se puede cubrir el universo
-  return resultado;
+  return setCover(0, seleccionadosInicial, [], sets, U);
 }

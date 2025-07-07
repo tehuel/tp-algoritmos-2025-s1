@@ -28,8 +28,7 @@ export function esUniversoCubierto(seleccionados, sets, U) {
     if (esSeleccionado) sets[i].forEach(e => elementosCubiertos.add(e));
   });
 
-  const todosCubiertos = U.every(e => elementosCubiertos.has(e));
-  return todosCubiertos;
+  return U.every(e => elementosCubiertos.has(e));
 }
 
 export function esSubconjuntoNecesario(indice, seleccionados, sets, U) {

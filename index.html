@@ -11,6 +11,7 @@
     <script src="set-cover-dp.js" type="module"></script>
     <script src="set-cover-local.js" type="module"></script>
     <script src="main.js" type="module"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
 </head>
 
 <body>
@@ -21,14 +22,13 @@
         </div>
     </section>
 
-    <section class="section">
-        <form id="set-cover-form">
-
+    <section class="section" x-data="setCoverForm">
+        <form id="set-cover-form" @submit.prevent="generar()">
             <div class="field">
                 <label class="label" for="algoritmo">Algoritmo</label>
                 <div class="control">
                     <div class="select">
-                        <select id="algoritmo" name="algoritmo">
+                        <select id="algoritmo" name="algoritmo" x-model="algoritmo">
                             <option value="dp">Programación Dinámica</option>
                             <option value="local">Búsqueda Local</option>
                         </select>
@@ -37,31 +37,69 @@
             </div>
 
             <label class="label" for="cantElementos">Cantidad de elementos en el universo:</label>
-            <input class="input" type="number" id="cantElementos" name="cantElementos" min="1" required value="6">
+            <input x-model.number="cantElementos" class="input" type="number" id="cantElementos" name="cantElementos"
+                min="1" required value="6">
 
             <label class="label" for="cantSubconjuntos">Cantidad de subconjuntos:</label>
-            <input class="input" type="number" id="cantSubconjuntos" name="cantSubconjuntos" min="1" required value="5">
+            <input x-model.number="cantSubconjuntos" class="input" type="number" id="cantSubconjuntos"
+                name="cantSubconjuntos" min="1" required value="5">
 
             <label class="label" for="tamMinSubconjunto">Tamaño mínimo de subconjunto:</label>
-            <input class="input" type="number" id="tamMinSubconjunto" name="tamMinSubconjunto" min="1" required
-                value="2">
+            <input x-model.number="tamMinSubconjunto" class="input" type="number" id="tamMinSubconjunto"
+                name="tamMinSubconjunto" min="1" required value="2">
 
             <label class="label" for="tamMaxSubconjunto">Tamaño máximo de subconjunto:</label>
-            <input class="input" type="number" id="tamMaxSubconjunto" name="tamMaxSubconjunto" min="1" required
-                value="3">
+            <input x-model.number="tamMaxSubconjunto" class="input" type="number" id="tamMaxSubconjunto"
+                name="tamMaxSubconjunto" min="1" required value="3">
 
             <div class="field is-grouped is-grouped-centered">
                 <p class="control">
-                    <button class="button is-primary" type="submit">Generar Problema</button>
+                    <button class="button is-primary" type="submit">Generar</button>
                 </p>
                 <p class="control">
-                    <button class="button" type="button" id="retry">Reintentar</button>
+                    <button @click="resolver()" class="button" type="button" id="retry">Resolver</button>
                 </p>
             </div>
         </form>
-    </section>
 
-    <pre id="output"></pre>
+        <template x-if="resultado">
+            <div class="box content">
+                <h2 class="title is-5">Solución</h2>
+                <div>
+                    <strong>Tiempo:</strong>
+                    <span x-text="resultado.tiempo + ' ms'"></span>
+                </div>
+                <div>
+                    <strong>Soluciónes:</strong>
+                    <ul>
+                        <template x-for="(fila, i) in resultado.solucion" :key="i">
+                            <li x-text="mostrarSolucion(fila)"></li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+        </template>
+
+        <template x-if="problema">
+            <section class="section">
+                <div>
+                    <strong>Universo:</strong>
+                    <span x-text="problema.universo.join(', ')"></span>
+                </div>
+                <div>
+                    <strong>Subconjuntos:</strong>
+                    <ul>
+                        <template x-for="(sub, idx) in problema.subconjuntos" :key="idx">
+                            <li>
+                                <strong>S<sub x-text="idx+1"></sub>:</strong>
+                                <span x-text="sub.join(', ')"></span>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </section>
+        </template>
+    </section>
 </body>
 
 </html>

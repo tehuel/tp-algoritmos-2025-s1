@@ -27,3 +27,10 @@ export const generarProblemaSetCover = (
     subconjuntos,
   };
 }
+
+export const generarHashProblema = (universo, subconjuntos) => {
+  const u = universo.join(",");
+  const s = subconjuntos.map(s => s.join(",")).join(";");
+  const hash = `${u}|${s}`;
+  return btoa(hash);
+}

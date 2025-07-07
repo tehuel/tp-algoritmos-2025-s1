@@ -1,5 +1,5 @@
 import { medirTiempo } from './utils.js';
-import { generarProblemaSetCover } from './problema.js';
+import { generarProblemaSetCover, generarHashProblema } from './problema.js';
 import { setCoverProgramacionDinamica } from './set-cover-dp.js';
 import { setCoverBusquedaLocal } from './set-cover-local.js';
 
@@ -8,48 +8,51 @@ const algoritmos = {
     "local": setCoverBusquedaLocal,
 };
 
-function resolver(algoritmo, universo, subconjuntos) {
-    const { resultado, tiempo } = medirTiempo(algoritmos[algoritmo], universo, subconjuntos);
 
-    const salida = {
-        tiempo: `${tiempo} ms`,
-        len: resultado.map(r => r.filter(Boolean).length),
-        resultado,
-        subconjuntos,
-        universo,
-    };
+document.addEventListener('alpine:init', () => {
+    Alpine.data('setCoverForm', () => ({
+        algoritmo: 'dp',
+        cantElementos: 5,
+        cantSubconjuntos: 5,
+        tamMinSubconjunto: 1,
+        tamMaxSubconjunto: 3,
+        ajustesHash: null,
+        problema: null,
+        resultado: null,
 
-    document.getElementById("output").textContent = JSON.stringify(salida, null, 2);
-}
+        get problemaHash() {
+            const hash = `${this.algoritmo}|${this.cantElementos}|${this.cantSubconjuntos}|${this.tamMinSubconjunto}|${this.tamMaxSubconjunto}`;
+            return btoa(hash);
+        },
 
-document.addEventListener("DOMContentLoaded", function () {
+        generar() {
+            const { universo, subconjuntos } = generarProblemaSetCover(
+                this.cantElementos,
+                this.cantSubconjuntos,
+                this.tamMinSubconjunto,
+                this.tamMaxSubconjunto
+            );
 
-    const form = document.querySelector("form");
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
+            this.problema = {
+                universo,
+                subconjuntos,
+                hash: generarHashProblema(universo, subconjuntos),
+            };
+            this.resultado = null;
+        },
 
-        // Obtener los valores del formulario
-        const {
-            algoritmo,
-            cantElementos,
-            cantSubconjuntos,
-            tamMinSubconjunto,
-            tamMaxSubconjunto
-        } = Object.fromEntries(
-            new FormData(form)
-                .entries()
-                .map(([key, value]) => [key, isNaN(parseInt(value)) ? value : parseInt(value)]) // Convertir los valores a enteros
-        );
+        resolver() {
+            const { universo, subconjuntos } = this.problema;
+            const algoritmo = algoritmos[this.algoritmo];
+            const { resultado: solucion, tiempo } = medirTiempo(algoritmo, universo, subconjuntos);
+            this.resultado = { solucion, tiempo };
+        },
 
-        const { universo, subconjuntos } = generarProblemaSetCover(cantElementos, cantSubconjuntos, tamMinSubconjunto, tamMaxSubconjunto);
-
-        const btnReintentar = document.querySelector("#retry");
-        btnReintentar.replaceWith(btnReintentar.cloneNode(true)); // Clonar el botón para eliminar los event listeners previos
-
-        document.querySelector("#retry").addEventListener("click", () => {
-            resolver(algoritmo, universo, subconjuntos);
-        });
-
-        resolver(algoritmo, universo, subconjuntos);
-    });
+        mostrarSolucion(solucion) {
+            return solucion
+            .map((s,i) => s ? `S${i+1} [${this.problema.subconjuntos[i]}]` : false)
+            .filter(Boolean)
+            .join(', ');
+        },
+    }));
 });
