@@ -24,35 +24,56 @@
 
     <section class="section" x-data="setCoverForm">
         <form id="set-cover-form" @submit.prevent="generar()">
-            <div class="field">
-                <label class="label" for="algoritmo">Algoritmo</label>
-                <div class="control">
-                    <div class="select">
-                        <select id="algoritmo" name="algoritmo" x-model="algoritmo">
-                            <option value="dp">Programación Dinámica</option>
-                            <option value="local">Búsqueda Local</option>
-                        </select>
+            <div class="columns is-mobile is-multiline">
+                <div class="column is-half field">
+                    <label class="label" for="algoritmo">Algoritmo</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="algoritmo" name="algoritmo" x-model="algoritmo">
+                                <option value="dp">Programación Dinámica</option>
+                                <option value="local">Búsqueda Local</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
+
+                <div class="column is-half field">
+                    <label class="label" for="cantElementos">Cantidad de elementos en el universo:</label>
+                    <div class="control">
+                        <input x-model.number="cantElementos" class="input" type="number" id="cantElementos"
+                            name="cantElementos" min="1" required value="6">
+
+                    </div>
+                </div>
+
+                <div class="column is-one-third field">
+                    <label class="label" for="cantSubconjuntos">Cantidad de subconjuntos:</label>
+                    <div class="control">
+                        <input x-model.number="cantSubconjuntos" class="input" type="number" id="cantSubconjuntos"
+                            name="cantSubconjuntos" min="1" required value="5">
+                    </div>
+                </div>
+
+                <div class="column is-one-third field">
+                    <label class="label" for="tamMinSubconjunto">Tamaño mínimo de subconjunto:</label>
+                    <div class="control">
+                        <input x-model.number="tamMinSubconjunto" class="input" type="number" id="tamMinSubconjunto"
+                            name="tamMinSubconjunto" min="1" required value="2">
+                    </div>
+                </div>
+
+                <div class="column is-one-third field">
+                    <label class="label" for="tamMaxSubconjunto">Tamaño máximo de subconjunto:</label>
+                    <div class="control">
+                        <input x-model.number="tamMaxSubconjunto" class="input" type="number" id="tamMaxSubconjunto"
+                            name="tamMaxSubconjunto" min="1" required value="3">
+                    </div>
+                </div>
+
+
             </div>
 
-            <label class="label" for="cantElementos">Cantidad de elementos en el universo:</label>
-            <input x-model.number="cantElementos" class="input" type="number" id="cantElementos" name="cantElementos"
-                min="1" required value="6">
-
-            <label class="label" for="cantSubconjuntos">Cantidad de subconjuntos:</label>
-            <input x-model.number="cantSubconjuntos" class="input" type="number" id="cantSubconjuntos"
-                name="cantSubconjuntos" min="1" required value="5">
-
-            <label class="label" for="tamMinSubconjunto">Tamaño mínimo de subconjunto:</label>
-            <input x-model.number="tamMinSubconjunto" class="input" type="number" id="tamMinSubconjunto"
-                name="tamMinSubconjunto" min="1" required value="2">
-
-            <label class="label" for="tamMaxSubconjunto">Tamaño máximo de subconjunto:</label>
-            <input x-model.number="tamMaxSubconjunto" class="input" type="number" id="tamMaxSubconjunto"
-                name="tamMaxSubconjunto" min="1" required value="3">
-
-            <div class="field is-grouped is-grouped-centered">
+            <div class="field is-grouped is-grouped-centered mt-3">
                 <p class="control">
                     <button class="button is-primary" type="submit">Generar</button>
                 </p>

@@ -1,5 +1,5 @@
 import { medirTiempo } from './utils.js';
-import { generarProblemaSetCover, generarHashProblema } from './problema.js';
+import { generarProblemaSetCover } from './problema.js';
 import { setCoverProgramacionDinamica } from './set-cover-dp.js';
 import { setCoverBusquedaLocal } from './set-cover-local.js';
 
@@ -20,11 +20,6 @@ document.addEventListener('alpine:init', () => {
         problema: null,
         resultado: null,
 
-        get problemaHash() {
-            const hash = `${this.algoritmo}|${this.cantElementos}|${this.cantSubconjuntos}|${this.tamMinSubconjunto}|${this.tamMaxSubconjunto}`;
-            return btoa(hash);
-        },
-
         generar() {
             const { universo, subconjuntos } = generarProblemaSetCover(
                 this.cantElementos,
@@ -33,19 +28,22 @@ document.addEventListener('alpine:init', () => {
                 this.tamMaxSubconjunto
             );
 
+            this.resultado = null;
             this.problema = {
                 universo,
                 subconjuntos,
-                hash: generarHashProblema(universo, subconjuntos),
             };
-            this.resultado = null;
         },
 
         resolver() {
             const { universo, subconjuntos } = this.problema;
             const algoritmo = algoritmos[this.algoritmo];
             const { resultado: solucion, tiempo } = medirTiempo(algoritmo, universo, subconjuntos);
-            this.resultado = { solucion, tiempo };
+            
+            this.resultado = { 
+                solucion, 
+                tiempo,
+            };
         },
 
         mostrarSolucion(solucion) {
