@@ -70,39 +70,66 @@
                     </div>
                 </div>
 
-
+                <div class="column is-one-third field">
+                    <label class="label" for="ejecuciones">Ejecuciones: <span x-text="ejecuciones"></span></label>
+                    <div class="control">
+                        <input x-model.number="ejecuciones" type="range" min="1" max="50" step="1" id="ejecuciones"
+                            name="ejecuciones">
+                    </div>
+                </div>
             </div>
 
             <div class="field is-grouped is-grouped-centered mt-3">
                 <p class="control">
                     <button class="button is-primary" type="submit">Generar</button>
                 </p>
+
                 <p class="control">
-                    <button @click="resolver()" class="button" type="button" id="retry">Resolver</button>
+                    <button @click="resolverHandler()" class="button" type="button" id="retry">Resolver</button>
+                </p>
+
+                <p class="control">
+                    <button @click="compararHandler()" :disabled="algoritmo == 'dp'" class="button" type="button"
+                        id="retry">Comparar</button>
                 </p>
             </div>
         </form>
 
-        <template x-if="resultado">
-            <div class="box content">
-                <h2 class="title is-5">Solución</h2>
-                <div>
-                    <strong>Tiempo:</strong>
-                    <span x-text="resultado.tiempo + ' ms'"></span>
-                </div>
-                <div>
-                    <strong>Soluciónes:</strong>
-                    <ul>
-                        <template x-for="(fila, i) in resultado.solucion" :key="i">
-                            <li x-text="mostrarSolucion(fila)"></li>
-                        </template>
-                    </ul>
-                </div>
-            </div>
-        </template>
+        <pre x-html="JSON.stringify(resultados)"></pre>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Tiempo</th>
+                    <th>Resultado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template x-for="(resultado, i) in resultados" :key="i">
+                    <tr>
+                        <td x-text="i+1"></td>
+                        <td x-text="resultado.tiempo + ' ms'"></td>
+                        <td>
+                            <template x-for="(fila, i) in resultado.solucion" :key="i">
+                                <pre x-text="mostrarSolucion(fila)"></pre>
+                            </template>
+                            <template x-if="!resultado.solucion.length">
+                                <p>No se encontró solución</p>
+                            </template>
+                        </td>
+                    </tr>
+                </template>
+                <template x-if="resultados.length === 0">
+                    <tr>
+                        <td colspan="4">No hay resultados disponibles</td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
 
         <template x-if="problema">
-            <section class="section">
+            <section class="section is-small is-primary">
                 <div>
                     <strong>Universo:</strong>
                     <span x-text="problema.universo.join(', ')"></span>

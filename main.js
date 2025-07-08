@@ -8,17 +8,23 @@ const algoritmos = {
     "local": setCoverBusquedaLocal,
 };
 
-
 document.addEventListener('alpine:init', () => {
     Alpine.data('setCoverForm', () => ({
+        // configuracion del algoritmo
         algoritmo: 'dp',
+
+        // configuración del problema
         cantElementos: 5,
         cantSubconjuntos: 5,
         tamMinSubconjunto: 1,
         tamMaxSubconjunto: 3,
-        ajustesHash: null,
         problema: null,
-        resultado: null,
+
+        // opciones de solucion
+        ejecuciones: 1,
+
+        // resultado de la resolución
+        resultados: [],
 
         generar() {
             const { universo, subconjuntos } = generarProblemaSetCover(
@@ -28,29 +34,45 @@ document.addEventListener('alpine:init', () => {
                 this.tamMaxSubconjunto
             );
 
-            this.resultado = null;
+            this.resultados = [];
             this.problema = {
                 universo,
                 subconjuntos,
             };
+
+            this.resolverHandler();
         },
 
-        resolver() {
+        obtenerSolucion() {
             const { universo, subconjuntos } = this.problema;
             const algoritmo = algoritmos[this.algoritmo];
             const { resultado: solucion, tiempo } = medirTiempo(algoritmo, universo, subconjuntos);
-            
-            this.resultado = { 
-                solucion, 
+
+            return {
+                solucion,
                 tiempo,
             };
         },
 
+        resolverHandler() {
+            this.resultados = [this.obtenerSolucion()];
+        },
+
+        compararHandler() {
+            this.resultados = [];
+            for (let i = 0; i < this.ejecuciones; i++) {
+                this.resultados.push(this.obtenerSolucion());
+            }
+        },
+
         mostrarSolucion(solucion) {
-            return solucion
-            .map((s,i) => s ? `S${i+1} [${this.problema.subconjuntos[i]}]` : false)
-            .filter(Boolean)
-            .join(', ');
+            const cantidadElementos = solucion.reduce((total, s) => total + (s ? 1 : 0), 0);
+            const string = solucion
+                .map((s,i) => s ? `S${i+1} [${this.problema.subconjuntos[i]}]` : false)
+                .filter(Boolean) // solo conservo los subconjuntos seleccionados
+                .join(', ');
+
+            return `${string} (${cantidadElementos} elementos)`;
         },
     }));
 });
