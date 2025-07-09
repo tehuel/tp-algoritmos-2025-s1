@@ -1,17 +1,25 @@
 import { medirTiempo } from './utils.js';
 import { generarProblemaSetCover } from './problema.js';
+
 import { setCoverProgramacionDinamica } from './set-cover-dp.js';
 import { setCoverBusquedaLocal } from './set-cover-local.js';
+import { setCoverGrasp } from './set-cover-grasp.js';
 
 const algoritmos = {
     "dp": setCoverProgramacionDinamica,
     "local": setCoverBusquedaLocal,
+    "grasp": setCoverGrasp,
 };
 
 document.addEventListener('alpine:init', () => {
     Alpine.data('setCoverForm', () => ({
+        loading: false,
+
         // configuracion del algoritmo
         algoritmo: 'dp',
+        configuracionAlgoritmo: {
+            ordenarConjuntos: 'no', // solo para busqueda local
+        },
 
         // configuración del problema
         cantElementos: 5,
@@ -21,7 +29,7 @@ document.addEventListener('alpine:init', () => {
         problema: null,
 
         // opciones de solucion
-        ejecuciones: 1,
+        ejecuciones: 10,
 
         // resultado de la resolución
         resultados: [],
@@ -43,26 +51,30 @@ document.addEventListener('alpine:init', () => {
             this.resolverHandler();
         },
 
-        obtenerSolucion() {
+        async obtenerSolucion() {
             const { universo, subconjuntos } = this.problema;
             const algoritmo = algoritmos[this.algoritmo];
-            const { resultado: solucion, tiempo } = medirTiempo(algoritmo, universo, subconjuntos);
-
+            
+            const { resultado: solucion, tiempo } = await medirTiempo(algoritmo, universo, subconjuntos);
             return {
                 solucion,
                 tiempo,
             };
         },
 
-        resolverHandler() {
-            this.resultados = [this.obtenerSolucion()];
+        async resolverHandler() {
+            this.loading = true;
+            this.resultados = [await this.obtenerSolucion()];
+            this.loading = false;
         },
 
-        compararHandler() {
+        async compararHandler() {
+            this.loading = true;
             this.resultados = [];
             for (let i = 0; i < this.ejecuciones; i++) {
-                this.resultados.push(this.obtenerSolucion());
+                this.resultados.push(await this.obtenerSolucion());
             }
+            this.loading = false;
         },
 
         mostrarSolucion(solucion) {
@@ -72,7 +84,7 @@ document.addEventListener('alpine:init', () => {
                 .filter(Boolean) // solo conservo los subconjuntos seleccionados
                 .join(', ');
 
-            return `${string} (${cantidadElementos} elementos)`;
+            return `(${cantidadElementos} elementos) - ${string}`;
         },
     }));
 });

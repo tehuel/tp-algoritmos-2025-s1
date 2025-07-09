@@ -1,3 +1,14 @@
+function yieldToMain () {
+  if (globalThis.scheduler?.yield) {
+    return scheduler.yield();
+  }
+
+  // Fall back to yielding with setTimeout.
+  return new Promise(resolve => {
+    setTimeout(resolve, 0);
+  });
+}
+
 export const obtenerElementoRandom = (array) => array[Math.floor(Math.random() * array.length)];
 
 export const mezclarArray = (array) => {
@@ -9,8 +20,9 @@ export const mezclarArray = (array) => {
     return arrayMezclado;
 };
 
-export function medirTiempo(fn, ...args) {
+export async function medirTiempo(fn, ...args) {
     const inico = performance.now();
+    await yieldToMain();
     const resultado = fn(...args);
     const fin = performance.now();
 

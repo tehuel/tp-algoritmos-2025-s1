@@ -53,5 +53,15 @@ Con esto nos aseguramos una solución mínima (no hay subconjuntos innecesarios)
 
 Al formulario de pruebas se le agregó la posibilidad de seleccionar estrategia de resolución, y también la opción para volver a resolver el mismo problema. Antes de esto, cada ejecución creaba y resolvía un nuevo problema, ahora podemos probar correr el mismo problema varias veces para ver si encontramos diferentes soluciones (esto es util dada la aleatoriedad de la seleccion de candidados para eliminar dentro de la busqueda local)
 
-## Ajuste de Parámetros en Búsqueda Local
+## Variación de Parámetros en Búsqueda Local
+
+Para empezar a trabajar con distintos parámetros, se incluyó la posibilidad de resolver el mismo ejercicio varias veces, presentando un listado de todos los resultados, y el tiempo que tomó cada ejecucion.
+
+Una variación que se puede optar por elegir es cambiar el criterio para seleccionar conjuntos, por ejemplo ordenar esos conjuntos de acuerdo a la cantidad de elementos que tiene cada conjunto. Para poder entender que diferencia hay entre intentar eliminar primero los conjuntos más grandes o los más pequeños.
+
+Algo interesante (al momento de hacer pruebas) es que se mantiene primero el reordenamiento aleatorio de los candidatos y luego se ordena, si es necesario, por tamaño de subconjuntos, asi que siempre se mantiene una cierta impredecibilidad.
+
+Al momento de hacer pruebas grandes se empieza a senir la demora en el tiempo de procesamiento, por lo que se agregó la posibilidad de mostrar estado de "loading", y dibujar cada uno de los resultados a medida que se va consiguiendo. Esto no evita que el programa "se cuelgue", pero ayuda a que la experiencia sea un poco mejor. En este punto un pendiente interesante para agregar sería contar con la posibilidad de calcular un valor totalizado o promediado al finalizar la ejecucion de todas las iteraciones.
+
+## Implementar algoritmo GRASP
 

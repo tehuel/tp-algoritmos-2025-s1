@@ -1,11 +1,19 @@
 import { mezclarArray, esUniversoCubierto, esSolucionMinima, esSubconjuntoNecesario } from './utils.js';
 
-export function setCoverBusquedaLocal (U, sets) {
+export function setCoverBusquedaLocal (U, sets, { ordenarConjuntos = 'no' } = {}) {
     // solucion inicial: todos los subconjuntos
     const seleccionados = Array(sets.length).fill(true);
 
     // candidatos a eliminar: todos los subconjuntos
     let candidatos = mezclarArray(sets.map((_, index) => index));
+    if (ordenarConjuntos === 'asc' || ordenarConjuntos === 'desc') {
+        // Ordenar los subconjuntos por tamaño
+        candidatos.sort((a, b) => {
+            const sizeA = sets[a].length;
+            const sizeB = sets[b].length;
+            return ordenarConjuntos === 'asc' ? sizeA - sizeB : sizeB - sizeA;
+        });
+    }
 
     // Mientras haya mejoras
     let mejorado = true;

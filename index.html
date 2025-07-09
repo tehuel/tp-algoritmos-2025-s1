@@ -32,6 +32,20 @@
                             <select id="algoritmo" name="algoritmo" x-model="algoritmo">
                                 <option value="dp">Programación Dinámica</option>
                                 <option value="local">Búsqueda Local</option>
+                                <option value="grasp">Greedy Randomized Adaptive Search (GRASP)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column is-half field" x-show="algoritmo == 'local'">
+                    <label class="label" for="ordenarConjuntos">Ordenar Conjuntos</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="ordenarConjuntos" name="ordenarConjuntos" x-model="ordenarConjuntos">
+                                <option value="no">No</option>
+                                <option value="asc">Ascendente</option>
+                                <option value="desc">Descendente</option>
                             </select>
                         </div>
                     </div>
@@ -70,7 +84,7 @@
                     </div>
                 </div>
 
-                <div class="column is-one-third field">
+                <div class="column is-one-third field" x-show="algoritmo != 'dp'">
                     <label class="label" for="ejecuciones">Ejecuciones: <span x-text="ejecuciones"></span></label>
                     <div class="control">
                         <input x-model.number="ejecuciones" type="range" min="1" max="50" step="1" id="ejecuciones"
@@ -81,11 +95,11 @@
 
             <div class="field is-grouped is-grouped-centered mt-3">
                 <p class="control">
-                    <button class="button is-primary" type="submit">Generar</button>
+                    <button class="button is-primary" type="submit" :disabled="loading" :class="{'is-loading': loading}">Generar</button>
                 </p>
 
                 <p class="control">
-                    <button @click="resolverHandler()" class="button" type="button" id="retry">Resolver</button>
+                    <button @click="resolverHandler()" class="button" :disabled="loading"  type="button" id="retry">Resolver</button>
                 </p>
 
                 <p class="control">
