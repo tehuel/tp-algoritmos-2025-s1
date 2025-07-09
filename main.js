@@ -14,32 +14,59 @@ const algoritmos = {
 document.addEventListener('alpine:init', () => {
     Alpine.data('setCoverForm', () => ({
         loading: false,
+        problema: null,
+        resultados: [],
 
-        // configuracion del algoritmo
-        algoritmo: 'dp',
-        configuracionAlgoritmo: {
-            ordenarConjuntos: 'no', // solo para busqueda local
+        form: {
+            // configuracion del algoritmo
+            algoritmo: 'dp',
+            configuracionAlgoritmo: {
+                // solo para busqueda local
+                ordenarConjuntos: 'no',
+
+                // solo para GRASP
+                iteraciones: 100, // número de iteraciones del GRASP
+                candidatosMax: 3, // número máximo de candidatos a eliminar en cada iteración
+                aleatoriedad: 0.5, // probabilidad de seleccionar un subconjunto ale
+            },
+
+            // configuración del problema
+            cantElementos: 5,
+            cantSubconjuntos: 5,
+            tamMinSubconjunto: 1,
+            tamMaxSubconjunto: 3,
+
+            // opciones de solucion
+            ejecuciones: 10,
         },
 
-        // configuración del problema
-        cantElementos: 5,
-        cantSubconjuntos: 5,
-        tamMinSubconjunto: 1,
-        tamMaxSubconjunto: 3,
-        problema: null,
+        // Guardar el formulario en localStorage
+        guardarFormulario() {
+            localStorage.setItem('setCoverForm', JSON.stringify(this.form));
+        },
 
-        // opciones de solucion
-        ejecuciones: 10,
-
-        // resultado de la resolución
-        resultados: [],
+        // Cargar el formulario desde localStorage
+        cargarFormulario() {
+            const data = localStorage.getItem('setCoverForm');
+            if (data) {
+                const form = JSON.parse(data);
+                // Copiar propiedades manualmente para mantener la reactividad
+                Object.keys(this.form).forEach(key => {
+                    if (typeof this.form[key] === 'object' && this.form[key] !== null && form[key]) {
+                        Object.assign(this.form[key], form[key]);
+                    } else {
+                        this.form[key] = form[key];
+                    }
+                });
+            }
+        },
 
         generar() {
             const { universo, subconjuntos } = generarProblemaSetCover(
-                this.cantElementos,
-                this.cantSubconjuntos,
-                this.tamMinSubconjunto,
-                this.tamMaxSubconjunto
+                this.form.cantElementos,
+                this.form.cantSubconjuntos,
+                this.form.tamMinSubconjunto,
+                this.form.tamMaxSubconjunto
             );
 
             this.resultados = [];
@@ -48,12 +75,13 @@ document.addEventListener('alpine:init', () => {
                 subconjuntos,
             };
 
+            this.guardarFormulario();
             this.resolverHandler();
         },
 
         async obtenerSolucion() {
             const { universo, subconjuntos } = this.problema;
-            const algoritmo = algoritmos[this.algoritmo];
+            const algoritmo = algoritmos[this.form.algoritmo];
 
             const { resultado: solucion, tiempo } = await medirTiempo(algoritmo, universo, subconjuntos);
             return {
@@ -66,15 +94,17 @@ document.addEventListener('alpine:init', () => {
             this.loading = true;
             this.resultados = [await this.obtenerSolucion()];
             this.loading = false;
+            this.guardarFormulario();
         },
 
         async compararHandler() {
             this.loading = true;
             this.resultados = [];
-            for (let i = 0; i < this.ejecuciones; i++) {
+            for (let i = 0; i < this.form.ejecuciones; i++) {
                 this.resultados.push(await this.obtenerSolucion());
             }
             this.loading = false;
+            this.guardarFormulario();
         },
 
         mostrarSolucion(solucion) {
@@ -123,6 +153,12 @@ document.addEventListener('alpine:init', () => {
             a.download = 'set_cover_results.csv';
             a.click();
             URL.revokeObjectURL(url);
+            this.guardarFormulario();
         },
+
+        // Al inicializar, cargar el formulario si existe en localStorage
+        init() {
+            this.cargarFormulario();
+        }
     }));
 });

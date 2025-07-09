@@ -14,27 +14,24 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
 </head>
 
-<body>
-    <section class="hero">
-        <div class="hero-body">
-            <h1 class="title">Set Cover</h1>
-            <p class="subtitle">Algoritmos de Programación Dinámica y Búsqueda Local</p>
-        </div>
-    </section>
+<body class="p-4">
+    <h1 class="title">Set Cover</h1>
+    <p class="subtitle">Trabajo Práctico de Algoritmos</p>
 
-    <section class="section" x-data="setCoverForm">
+    <section class="m-3" x-data="setCoverForm" x-init="init()">
         <form id="set-cover-form" @submit.prevent="generar()">
             <div class="columns is-mobile is-multiline">
 
+                <!-- Configuración del Algoritmo -->
                 <div class="column">
-                    <fieldset class="columns is-mobile is-multiline fieldset">
+                    <fieldset class="columns is-mobile is-multiline">
                         <legend class="label">Configuración del Algoritmo</legend>
 
                         <div class="column is-full field">
                             <label class="label" for="algoritmo">Algoritmo</label>
                             <div class="control">
                                 <div class="select">
-                                    <select id="algoritmo" name="algoritmo" x-model="algoritmo">
+                                    <select id="algoritmo" name="algoritmo" x-model="form.algoritmo">
                                         <option value="dp">Programación Dinámica</option>
                                         <option value="local">Búsqueda Local</option>
                                         <option value="grasp">Greedy Randomized Adaptive Search (GRASP)</option>
@@ -46,7 +43,7 @@
                             <label class="label" for="ordenarConjuntos">Ordenar Conjuntos</label>
                             <div class="control">
                                 <div class="select">
-                                    <select id="ordenarConjuntos" name="ordenarConjuntos" x-model="ordenarConjuntos">
+                                    <select id="ordenarConjuntos" name="ordenarConjuntos" x-model="form.ordenarConjuntos">
                                         <option value="no">No</option>
                                         <option value="asc">Ascendente</option>
                                         <option value="desc">Descendente</option>
@@ -59,21 +56,44 @@
                             <label class="label" for="ejecuciones">Ejecuciones: <span
                                     x-text="ejecuciones"></span></label>
                             <div class="control">
-                                <input x-model.number="ejecuciones" type="range" min="1" max="50" step="1"
+                                <input x-model.number="form.ejecuciones" type="range" min="1" max="50" step="1"
                                     id="ejecuciones" name="ejecuciones">
+                            </div>
+                        </div>
+
+                        <div class="column is-one-third field" x-show="algoritmo == 'grasp'">
+                            <label class="label" for="iteraciones">Iteraciones</label>
+                            <div class="control">
+                                <input x-model.number="form.configuracionAlgoritmo.iteraciones" class="input" type="number" id="iteraciones"
+                                    name="iteraciones" min="1" max="100" required value="10">
+                            </div>
+                        </div>
+                        <div class="column is-one-third field" x-show="algoritmo == 'grasp'">
+                            <label class="label" for="candidatosMax">Candidatos Máximos</label>
+                            <div class="control">
+                                <input x-model.number="form.configuracionAlgoritmo.candidatosMax" class="input" type="number" id="candidatosMax"
+                                    name="candidatosMax" min="1" max="5" required value="3">
+                            </div>
+                        </div>
+                        <div class="column is-one-third field" x-show="algoritmo == 'grasp'">
+                            <label class="label" for="aleatoriedad">Aleatoriedad</label>
+                            <div class="control">
+                                <input x-model.number="form.configuracionAlgoritmo.aleatoriedad" class="input" type="number" id="aleatoriedad"
+                                    name="aleatoriedad" min="0" max="1" step="0.01" required value="0.5">
                             </div>
                         </div>
                     </fieldset>
                 </div>
 
+                <!-- Configuración del Problema -->
                 <div class="column">
-                    <fieldset class="columns is-mobile is-multiline fieldset">
+                    <fieldset class="columns is-mobile is-multiline">
                         <legend class="label">Configuración del Problema</legend>
 
                         <div class="column is-half field">
                             <label class="label" for="cantElementos">Cantidad de elementos en el universo:</label>
                             <div class="control">
-                                <input x-model.number="cantElementos" class="input" type="number" id="cantElementos"
+                                <input x-model.number="form.cantElementos" class="input" type="number" id="cantElementos"
                                     name="cantElementos" min="1" required value="6">
 
                             </div>
@@ -82,7 +102,7 @@
                         <div class="column is-half field">
                             <label class="label" for="cantSubconjuntos">Cantidad de subconjuntos:</label>
                             <div class="control">
-                                <input x-model.number="cantSubconjuntos" class="input" type="number"
+                                <input x-model.number="form.cantSubconjuntos" class="input" type="number"
                                     id="cantSubconjuntos" name="cantSubconjuntos" min="1" required value="5">
                             </div>
                         </div>
@@ -90,7 +110,7 @@
                         <div class="column is-half field">
                             <label class="label" for="tamMinSubconjunto">Tamaño mínimo de subconjunto:</label>
                             <div class="control">
-                                <input x-model.number="tamMinSubconjunto" class="input" type="number"
+                                <input x-model.number="form.tamMinSubconjunto" class="input" type="number"
                                     id="tamMinSubconjunto" name="tamMinSubconjunto" min="1" required value="2">
                             </div>
                         </div>
@@ -98,7 +118,7 @@
                         <div class="column is-half field">
                             <label class="label" for="tamMaxSubconjunto">Tamaño máximo de subconjunto:</label>
                             <div class="control">
-                                <input x-model.number="tamMaxSubconjunto" class="input" type="number"
+                                <input x-model.number="form.tamMaxSubconjunto" class="input" type="number"
                                     id="tamMaxSubconjunto" name="tamMaxSubconjunto" min="1" required value="3">
                             </div>
                         </div>
@@ -106,7 +126,8 @@
                 </div>
             </div>
 
-            <div class="field is-grouped is-grouped-centered mt-3">
+            <!-- Acciones -->
+            <div class="field is-grouped is-grouped-centered my-3">
                 <p class="control">
                     <button class="button is-primary" type="submit" :disabled="loading"
                         :class="{'is-loading': loading}">Generar</button>
@@ -129,7 +150,7 @@
             </div>
         </form>
 
-        <table class="table">
+        <table class="table mx-auto">
             <thead>
                 <tr>
                     <th>#</th>
