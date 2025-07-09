@@ -31,8 +31,9 @@
                         <div class="column is-full field">
                             <label class="label" for="algoritmo">Algoritmo</label>
                             <div class="control">
-                                <div class="select">
-                                    <select id="algoritmo" name="algoritmo" x-model="form.algoritmo">
+                                <div class="select" style="width: 100%;">
+                                    <select id="algoritmo" name="algoritmo" x-model="form.algoritmo"
+                                        style="width: 100%;">
                                         <option value="dp">Programación Dinámica</option>
                                         <option value="local">Búsqueda Local</option>
                                         <option value="grasp">Greedy Randomized Adaptive Search (GRASP)</option>
@@ -40,11 +41,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="column is-half field" x-show="algoritmo == 'local'">
+                        <div class="column is-half field" x-show="form.algoritmo == 'local'">
                             <label class="label" for="ordenarConjuntos">Ordenar Conjuntos</label>
                             <div class="control">
-                                <div class="select">
-                                    <select id="ordenarConjuntos" name="ordenarConjuntos" x-model="form.ordenarConjuntos">
+                                <div class="select" style="width: 100%;">
+                                    <select id="ordenarConjuntos" name="ordenarConjuntos"
+                                        x-model="form.ordenarConjuntos" style="width: 100%;">
                                         <option value="no">No</option>
                                         <option value="asc">Ascendente</option>
                                         <option value="desc">Descendente</option>
@@ -53,34 +55,35 @@
                             </div>
                         </div>
 
-                        <div class="column is-one-third field" x-show="algoritmo != 'dp'">
+                        <div class="column is-full field" x-show="form.algoritmo != 'dp'">
                             <label class="label" for="ejecuciones">Ejecuciones: <span
-                                    x-text="ejecuciones"></span></label>
+                                    x-text="form.ejecuciones"></span></label>
                             <div class="control">
                                 <input x-model.number="form.ejecuciones" type="range" min="1" max="50" step="1"
-                                    id="ejecuciones" name="ejecuciones">
+                                    id="ejecuciones" name="ejecuciones" style="width: 100%;">
                             </div>
                         </div>
 
-                        <div class="column is-one-third field" x-show="algoritmo == 'grasp'">
+                        <div class="column is-one-third field" x-show="form.algoritmo == 'grasp'">
                             <label class="label" for="iteraciones">Iteraciones</label>
                             <div class="control">
-                                <input x-model.number="form.configuracionAlgoritmo.iteraciones" class="input" type="number" id="iteraciones"
-                                    name="iteraciones" min="1" max="100" required value="10">
+                                <input x-model.number="form.configuracionAlgoritmo.iteraciones" class="input"
+                                    type="number" id="iteraciones" name="iteraciones" min="1" max="10000" required>
                             </div>
                         </div>
-                        <div class="column is-one-third field" x-show="algoritmo == 'grasp'">
-                            <label class="label" for="candidatosMax">Candidatos Máximos</label>
+                        <div class="column is-one-third field" x-show="form.algoritmo == 'grasp'">
+                            <label class="label" for="candidatosMax">Candidatos (Máx)</label>
                             <div class="control">
-                                <input x-model.number="form.configuracionAlgoritmo.candidatosMax" class="input" type="number" id="candidatosMax"
-                                    name="candidatosMax" min="1" max="5" required value="3">
+                                <input x-model.number="form.configuracionAlgoritmo.candidatosMax" class="input"
+                                    type="number" id="candidatosMax" name="candidatosMax" min="1" max="5" required>
                             </div>
                         </div>
-                        <div class="column is-one-third field" x-show="algoritmo == 'grasp'">
+                        <div class="column is-one-third field" x-show="form.algoritmo == 'grasp'">
                             <label class="label" for="aleatoriedad">Aleatoriedad</label>
                             <div class="control">
-                                <input x-model.number="form.configuracionAlgoritmo.aleatoriedad" class="input" type="number" id="aleatoriedad"
-                                    name="aleatoriedad" min="0" max="1" step="0.01" required value="0.5">
+                                <input x-model.number="form.configuracionAlgoritmo.aleatoriedad" class="input"
+                                    type="number" id="aleatoriedad" name="aleatoriedad" min="0" max="1" step="0.1"
+                                    required>
                             </div>
                         </div>
                     </fieldset>
@@ -94,8 +97,8 @@
                         <div class="column is-half field">
                             <label class="label" for="cantElementos">Cantidad de elementos en el universo:</label>
                             <div class="control">
-                                <input x-model.number="form.cantElementos" class="input" type="number" id="cantElementos"
-                                    name="cantElementos" min="1" required value="6">
+                                <input x-model.number="form.cantElementos" class="input" type="number"
+                                    id="cantElementos" name="cantElementos" min="1" required>
 
                             </div>
                         </div>
@@ -104,7 +107,7 @@
                             <label class="label" for="cantSubconjuntos">Cantidad de subconjuntos:</label>
                             <div class="control">
                                 <input x-model.number="form.cantSubconjuntos" class="input" type="number"
-                                    id="cantSubconjuntos" name="cantSubconjuntos" min="1" required value="5">
+                                    id="cantSubconjuntos" name="cantSubconjuntos" min="1" required>
                             </div>
                         </div>
 
@@ -112,7 +115,7 @@
                             <label class="label" for="tamMinSubconjunto">Tamaño mínimo de subconjunto:</label>
                             <div class="control">
                                 <input x-model.number="form.tamMinSubconjunto" class="input" type="number"
-                                    id="tamMinSubconjunto" name="tamMinSubconjunto" min="1" required value="2">
+                                    id="tamMinSubconjunto" name="tamMinSubconjunto" min="1" required>
                             </div>
                         </div>
 
@@ -120,7 +123,7 @@
                             <label class="label" for="tamMaxSubconjunto">Tamaño máximo de subconjunto:</label>
                             <div class="control">
                                 <input x-model.number="form.tamMaxSubconjunto" class="input" type="number"
-                                    id="tamMaxSubconjunto" name="tamMaxSubconjunto" min="1" required value="3">
+                                    id="tamMaxSubconjunto" name="tamMaxSubconjunto" min="1" required>
                             </div>
                         </div>
                     </fieldset>
@@ -151,56 +154,59 @@
             </div>
         </form>
 
-        <table class="table mx-auto">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Tiempo</th>
-                    <th>Resultado</th>
-                </tr>
-            </thead>
-            <tbody>
-                <template x-for="(resultado, i) in resultados" :key="i">
-                    <tr>
-                        <td x-text="i+1"></td>
-                        <td x-text="resultado.tiempo + ' ms'"></td>
-                        <td>
-                            <template x-for="(fila, i) in resultado.solucion" :key="i">
-                                <pre x-text="mostrarSolucion(fila)"></pre>
-                            </template>
-                            <template x-if="!resultado.solucion.length">
-                                <p>No se encontró solución</p>
-                            </template>
-                        </td>
-                    </tr>
-                </template>
-                <template x-if="resultados.length === 0">
-                    <tr>
-                        <td colspan="4">No hay resultados disponibles</td>
-                    </tr>
-                </template>
-            </tbody>
-        </table>
-
-        <template x-if="problema">
-            <section class="section is-small is-primary">
-                <div>
-                    <strong>Universo:</strong>
-                    <span x-text="problema.universo.join(', ')"></span>
+        <div class="columns is-mobile">
+            <template x-if="problema">
+                <div class="column">
+                    <section class="section is-small is-primary">
+                        <div>
+                            <strong>Universo:</strong>
+                            <span x-text="problema.universo.join(', ')"></span>
+                        </div>
+                        <div>
+                            <strong>Subconjuntos:</strong>
+                            <ul>
+                                <template x-for="(sub, idx) in problema.subconjuntos" :key="idx">
+                                    <li>
+                                        <strong>S<sub x-text="idx+1"></sub>:</strong>
+                                        <span x-text="sub.join(', ')"></span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </section>
                 </div>
-                <div>
-                    <strong>Subconjuntos:</strong>
-                    <ul>
-                        <template x-for="(sub, idx) in problema.subconjuntos" :key="idx">
-                            <li>
-                                <strong>S<sub x-text="idx+1"></sub>:</strong>
-                                <span x-text="sub.join(', ')"></span>
-                            </li>
-                        </template>
-                    </ul>
-                </div>
-            </section>
-        </template>
+            </template>
+            <table class="table mx-auto">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tiempo</th>
+                        <th>Resultado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template x-for="(resultado, i) in resultados" :key="i">
+                        <tr>
+                            <td x-text="i+1"></td>
+                            <td x-text="resultado.tiempo + ' ms'"></td>
+                            <td>
+                                <template x-for="(fila, i) in resultado.solucion" :key="i">
+                                    <pre x-text="mostrarSolucion(fila)"></pre>
+                                </template>
+                                <template x-if="!resultado.solucion.length">
+                                    <p>No se encontró solución</p>
+                                </template>
+                            </td>
+                        </tr>
+                    </template>
+                    <template x-if="resultados.length === 0">
+                        <tr>
+                            <td colspan="4">No hay resultados disponibles</td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
     </section>
 </body>
 
