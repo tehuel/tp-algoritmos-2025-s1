@@ -39,12 +39,6 @@ export function setCoverGrasp (
         }
     }
 
-    // Verificar si la solución es mínima
-    if (!esSolucionMinima(seleccionados, sets, U)) {
-        console.warn("La solución encontrada no es mínima.");
-        return []; // No es una solución mínima
-    }
-
     // Devolver los subconjuntos seleccionados
     return [ seleccionados ];
 }
