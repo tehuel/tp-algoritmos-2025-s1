@@ -106,6 +106,10 @@
                     <button @click="compararHandler()" :disabled="algoritmo == 'dp'" class="button" type="button"
                         id="retry">Comparar</button>
                 </p>
+
+                <p class="control">
+                    <button @click="exportarCsv()" :disabled="!resultados.length" class="button is-info" type="button">Exportar CSV</button>
+                </p>
             </div>
         </form>
 

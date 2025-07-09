@@ -54,7 +54,7 @@ document.addEventListener('alpine:init', () => {
         async obtenerSolucion() {
             const { universo, subconjuntos } = this.problema;
             const algoritmo = algoritmos[this.algoritmo];
-            
+
             const { resultado: solucion, tiempo } = await medirTiempo(algoritmo, universo, subconjuntos);
             return {
                 solucion,
@@ -80,11 +80,49 @@ document.addEventListener('alpine:init', () => {
         mostrarSolucion(solucion) {
             const cantidadElementos = solucion.reduce((total, s) => total + (s ? 1 : 0), 0);
             const string = solucion
-                .map((s,i) => s ? `S${i+1} [${this.problema.subconjuntos[i]}]` : false)
+                .map((s, i) => s ? `S${i + 1} [${this.problema.subconjuntos[i]}]` : false)
                 .filter(Boolean) // solo conservo los subconjuntos seleccionados
                 .join(', ');
 
             return `(${cantidadElementos} elementos) - ${string}`;
+        },
+
+        // Exportar el problema completo y los resultados a un archivo CSV
+        // Cada fila será un resultado, y contendrá: Universo;Subconjuntos;Algoritmo;Solución;Tiempo (ms)
+        exportarCsv() {
+            const csvRows = [];
+            const header = 'Universo;Subconjuntos;Algoritmo;Solución;Tiempo (ms)';
+            csvRows.push(header);
+
+            console.log('Exportando resultados a CSV...', this.resultados);
+
+            this.resultados.forEach(({ solucion, tiempo }) => {
+                solucion.forEach((s, i) => {
+                    const subconjuntosSeleccionados = this.problema.subconjuntos
+                        .map((ss, i) => s[i] ? `S${i + 1} [${ss}]` : null)
+                        .filter(Boolean)
+                        .join(', ');
+
+                    const row = [
+                        this.problema.universo.join(', '),
+                        this.problema.subconjuntos.map(s => `[${s}]`).join(', '),
+                        this.algoritmo,
+                        subconjuntosSeleccionados,
+                        tiempo.toFixed(2),
+                    ].join(';');
+
+                    csvRows.push(row);
+                });
+            });
+
+            const csvContent = csvRows.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'set_cover_results.csv';
+            a.click();
+            URL.revokeObjectURL(url);
         },
     }));
 });
