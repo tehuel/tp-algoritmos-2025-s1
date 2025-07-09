@@ -65,3 +65,7 @@ Al momento de hacer pruebas grandes se empieza a senir la demora en el tiempo de
 
 ## Implementar algoritmo GRASP
 
+Para ir mejorando la ejecucion de diferentes casos se agregaron algunas funcionalidades:
+- Exportar a CSV: para generar un archivo CSV con todas las soluciones encontradas.
+- Guardar en LocalStorage: para persistir la ultima configuración usada y que el formulario no se reinicie cada vez que se recarga la página.
+- Reorganización del formulario: para tener por separado las configuraciones del universo del problema vs las configuraciones del algoritmo.
