@@ -92,6 +92,7 @@ document.addEventListener('alpine:init', () => {
 
         async resolverHandler() {
             this.loading = true;
+            this.resultados = [];
             this.resultados = [await this.obtenerSolucion()];
             this.loading = false;
             this.guardarFormulario();
