@@ -134,12 +134,12 @@
                 </p>
 
                 <p class="control">
-                    <button @click="resolverHandler()" class="button" :disabled="loading" type="button"
+                    <button @click="resolverHandler()" class="button" :disabled="!problema || loading" type="button"
                         id="retry">Resolver</button>
                 </p>
 
                 <p class="control">
-                    <button @click="compararHandler()" :disabled="algoritmo == 'dp'" class="button" type="button"
+                    <button @click="compararHandler()" :disabled="algoritmo == 'dp' || !problema || loading" class="button" type="button"
                         id="retry">Comparar</button>
                 </p>
 
