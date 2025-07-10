@@ -47,7 +47,7 @@ function greedyAleatorio (U, sets, candidatosMax, aleatoriedad) {
     return seleccionados;
 }
 
-function localSearch (U, sets, seleccionados) {
+function mejorarConBusquedaLocal (U, sets, seleccionados) {
     let mejorSeleccion = [...seleccionados];
 
     // intento mejorar la solución eliminando subconjuntos innecesarios
@@ -56,10 +56,7 @@ function localSearch (U, sets, seleccionados) {
         if (esSubconjuntoNecesario(i, mejorSeleccion, sets, U)) continue;
 
         mejorSeleccion[i] = false; // elimino el conjunto
-        if (esUniversoCubierto(mejorSeleccion, sets, U)) {
-            console.log(`Eliminado S${i + 1} [${sets[i]}]`);
-        } else {
-            console.log(`No se puede eliminar S${i + 1} [${sets[i]}]`);
+        if (!esUniversoCubierto(mejorSeleccion, sets, U)) {
             mejorSeleccion[i] = true; // lo vuelvo a seleccionar
         }
     }
@@ -78,13 +75,12 @@ export function setCoverGrasp (
     let mejorSolucion = null;
     for (let i = 0; i < iteraciones; i++) {
         const solucionGreedy = greedyAleatorio(U, sets, candidatosMax, aleatoriedad);
-        const solucionGreedyMejorada = localSearch(U, sets, solucionGreedy);
+        const solucionGreedyMejorada = mejorarConBusquedaLocal(U, sets, solucionGreedy);
 
         if (!mejorSolucion || solucionGreedyMejorada.length < mejorSolucion.length) {
             mejorSolucion = solucionGreedyMejorada;
         }
     }
 
-    // Devolver los subconjuntos seleccionados
     return [ mejorSolucion ];
 }

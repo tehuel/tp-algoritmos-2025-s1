@@ -1,6 +1,12 @@
 import { mezclarArray, esUniversoCubierto, esSolucionMinima, esSubconjuntoNecesario } from './utils.js';
 
-export function setCoverBusquedaLocal (U, sets, { ordenarConjuntos = 'no' } = {}) {
+export function setCoverBusquedaLocal (
+    U, 
+    sets, 
+    { 
+        ordenarConjuntos = 'no' // 'asc', 'desc' o 'no'
+    } = {}
+) {
     // solucion inicial: todos los subconjuntos
     const seleccionados = Array(sets.length).fill(true);
 
