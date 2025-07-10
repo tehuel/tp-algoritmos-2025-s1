@@ -1,5 +1,11 @@
 # Trabajo Práctico: Algoritmos
 
+Alumnos:
+- Torres Baldi, Tehuel
+- Lattanzio, Bruno
+
+
+
 ## Ejercicio 1: Programación Dinámica
 
 La primera implementación del problema Set Cover fue realizada en JavaScript utilizando una estrategia de programación dinámica. Esta técnica evaluaba cada posible combinación de subconjuntos para verificar si representaba una solución válida al problema.
@@ -99,4 +105,4 @@ En esta segunda iteración se ve una significante mejoría en la calidad de las 
 
 ## Gráficos
 
-Para graficar las soluciones se usa chartjs. 
+Para graficar las soluciones se usa chartjs. Por falta de tiempo no se llegó a implementar una solucion de gráficos más completa.

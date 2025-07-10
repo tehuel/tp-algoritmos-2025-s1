@@ -83,11 +83,12 @@ document.addEventListener('alpine:init', () => {
             this.resolverHandler();
         },
 
-        async obtenerSolucion() {
+        async obtenerSolucion(ronda = 0) {
             const { universo, subconjuntos } = this.problema;
             const algoritmo = algoritmos[this.form.algoritmo];
-
-            const { resultado: solucion, tiempo } = await medirTiempo(algoritmo, universo, subconjuntos, this.form.configuracionAlgoritmo);
+            const config = this.form.rondas[ronda] || configuracionAlgoritmosInicial();
+            
+            const { resultado: solucion, tiempo } = await medirTiempo(algoritmo, universo, subconjuntos, config);
             return {
                 solucion,
                 tiempo,
@@ -106,10 +107,17 @@ document.addEventListener('alpine:init', () => {
         async compararHandler() {
             this.loading = true;
             this.resultados = [];
-            for (let i = 0; i < this.form.ejecuciones; i++) {
-                this.resultados.push(await this.obtenerSolucion());
+            for (let i = 0; i < this.form.rondas.length; i++) {
+                this.resultados[i] = [];
+
+                for (let j = 0; j < this.form.ejecuciones; j++) {
+                    const resultadoEjecucion = await this.obtenerSolucion(i);
+                    this.resultados[i].push(resultadoEjecucion);
+                }
             }
             this.loading = false;
+            console.log('Resultados obtenidos:', JSON.parse(JSON.stringify(this.resultados)));
+            this.graficarResultados();
             this.guardarFormulario();
         },
 
@@ -174,6 +182,42 @@ document.addEventListener('alpine:init', () => {
             a.click();
             URL.revokeObjectURL(url);
             this.guardarFormulario();
+        },
+
+        // Graficar los resultados obtenidos
+        graficarResultados() {
+            const ctx = document.getElementById('graficoResultados').getContext('2d');
+            const datasets = this.resultados.map((ronda, index) => ({
+                label: `Ronda ${index + 1}`,
+                data: ronda.map(res => res.tiempo),
+                fill: false,
+            }));
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({ length: this.form.ejecuciones }, (_, i) => `Ejecución ${i + 1}`),
+                    datasets,
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Tiempo (ms)',
+                            },
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Ejecuciones',
+                            },
+                        },
+                    },
+                },
+            });
         },
 
         // Al inicializar, cargar el formulario si existe en localStorage

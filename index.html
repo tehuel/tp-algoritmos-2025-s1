@@ -102,7 +102,8 @@
                                         <hr class="hr my-3">
                                     </div>
                                 </template>
-                                <button class="button is-secondary is-sm" type="button" @click="agregarRonda()">Agregar Ronda</button>
+                                <button class="button is-secondary is-sm" type="button" @click="agregarRonda()">Agregar
+                                    Ronda</button>
                             </div>
                         </template>
                     </fieldset>
@@ -175,7 +176,7 @@
 
         <!-- Grafico -->
         <div>
-            <canvas id="graficoResultados" class="mx-auto" style="max-width: 800px;"></canvas>
+            <canvas id="graficoResultados" class="mx-auto" style="width: 800px;"></canvas>
         </div>
 
         <div class="columns is-mobile">
@@ -200,38 +201,13 @@
                     </section>
                 </div>
             </template>
-            <div class="column is-four-fifths">
-                <table class="table mx-auto">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Tiempo</th>
-                            <th>Resultado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template x-for="(resultado, i) in resultados" :key="i">
-                            <tr>
-                                <td x-text="i+1"></td>
-                                <td x-text="resultado.tiempo + ' ms'"></td>
-                                <td>
-                                    <template x-for="(fila, i) in resultado.solucion" :key="i">
-                                        <pre x-text="mostrarSolucion(fila)"></pre>
-                                    </template>
-                                    <template x-if="!resultado.solucion.length">
-                                        <p>No se encontró solución</p>
-                                    </template>
-                                </td>
-                            </tr>
-                        </template>
-                        <template x-if="resultados.length === 0">
-                            <tr>
-                                <td colspan="4">No hay resultados disponibles</td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
-            </div>
+
+            <template x-for="(ronda, r) in resultados" :key="r">
+                <div>
+                    <h2 class="title is-4">Ronda <span x-text="r + 1"></span></h2>
+                    <pre x-html="JSON.stringify(ronda)"></pre>
+                </div>
+            </template>
         </div>
     </section>
 </body>
