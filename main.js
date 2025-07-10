@@ -1,4 +1,4 @@
-import { medirTiempo } from './utils.js';
+import { medirTiempo, informacionSolucion} from './utils.js';
 import { generarProblemaSetCover } from './problema.js';
 
 import { setCoverProgramacionDinamica } from './set-cover-dp.js';
@@ -11,6 +11,16 @@ const algoritmos = {
     "grasp": setCoverGrasp,
 };
 
+const configuracionAlgoritmosInicial = () => ({
+    // solo para busqueda local
+    ordenarConjuntos: 'no',
+
+    // solo para GRASP
+    iteraciones: 100, // número de iteraciones del GRASP
+    candidatosMax: 3, // número máximo de candidatos a eliminar en cada iteración
+    aleatoriedad: 0.5, // probabilidad de seleccionar un subconjunto aleatorio  
+});
+
 document.addEventListener('alpine:init', () => {
     Alpine.data('setCoverForm', () => ({
         loading: false,
@@ -20,21 +30,15 @@ document.addEventListener('alpine:init', () => {
         form: {
             // configuracion del algoritmo
             algoritmo: 'dp',
-            configuracionAlgoritmo: {
-                // solo para busqueda local
-                ordenarConjuntos: 'no',
-
-                // solo para GRASP
-                iteraciones: 100, // número de iteraciones del GRASP
-                candidatosMax: 3, // número máximo de candidatos a eliminar en cada iteración
-                aleatoriedad: 0.5, // probabilidad de seleccionar un subconjunto ale
-            },
+            rondas: [],
 
             // configuración del problema
             cantElementos: 5,
             cantSubconjuntos: 5,
             tamMinSubconjunto: 1,
             tamMaxSubconjunto: 3,
+
+            // opciones de repeticion de soluciones
 
             // opciones de solucion
             ejecuciones: 10,
@@ -87,6 +91,7 @@ document.addEventListener('alpine:init', () => {
             return {
                 solucion,
                 tiempo,
+                informacion: solucion.map((s) => informacionSolucion(s, subconjuntos, universo)),
             };
         },
 
@@ -116,6 +121,20 @@ document.addEventListener('alpine:init', () => {
                 .join(', ');
 
             return `(${cantidadElementos} elementos) - ${string}`;
+        },
+
+        agregarRonda() {
+            this.form.rondas.push({
+                ...configuracionAlgoritmosInicial(),
+            });
+            this.guardarFormulario();
+        },
+
+        eliminarRonda(index) {
+            if (this.form.rondas.length > 1) {
+                this.form.rondas.splice(index, 1);
+                this.guardarFormulario();
+            }
         },
 
         // Exportar el problema completo y los resultados a un archivo CSV

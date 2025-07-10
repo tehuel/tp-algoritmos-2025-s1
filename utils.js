@@ -40,6 +40,18 @@ export function deSolucionAListadoDeConjuntos(seleccionados, sets) {
   return deSolucionAListadoDeIndices(seleccionados).map(i => sets[i]);
 }
 
+/**
+ * Genera un objeto con la información de la solución encontrada
+ *
+ * @param {boolean[]} seleccionados - Array de booleanos que indica qué subconjuntos están seleccionados.
+ * @param {Array<Array<number>>} sets - Array de subconjuntos, donde cada subconjunto es un array de elementos.
+ * @param {Array<number>} U - Conjunto universo de elementos a cubrir.
+ * @returns {Object} Un objeto que contiene:
+ *   - `seleccionados`: Array de subconjuntos seleccionados.
+ *   - `cantidadSeleccionados`: Cantidad de subconjuntos seleccionados.
+ *   - `esSolucion`: Booleano que indica si la selección cubre el universo U.
+ *   - `esMinima`: Booleano que indica si la selección es una solución mínima.
+ */
 export function informacionSolucion(seleccionados, sets, U) {
   return {
     seleccionados: deSolucionAListadoDeConjuntos(seleccionados, sets),

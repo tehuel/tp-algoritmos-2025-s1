@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
     <script src="main.js" type="module"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 
@@ -17,7 +18,7 @@
 
     <section class="m-3" x-data="setCoverForm" x-init="init()">
         <form id="set-cover-form" @submit.prevent="generar()">
-            <div class="columns is-mobile is-multiline">
+            <div class="columns is-multiline">
 
                 <!-- Configuración del Algoritmo -->
                 <div class="column">
@@ -37,20 +38,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="column is-half field" x-show="form.algoritmo == 'local'">
-                            <label class="label" for="ordenarConjuntos">Ordenar Conjuntos</label>
-                            <div class="control">
-                                <div class="select" style="width: 100%;">
-                                    <select id="ordenarConjuntos" name="ordenarConjuntos"
-                                        x-model="form.ordenarConjuntos" style="width: 100%;">
-                                        <option value="no">No</option>
-                                        <option value="asc">Ascendente</option>
-                                        <option value="desc">Descendente</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
 
+
+                        <!-- configurar ejecuciones por ronda -->
                         <div class="column is-full field" x-show="form.algoritmo != 'dp'">
                             <label class="label" for="ejecuciones">Ejecuciones: <span
                                     x-text="form.ejecuciones"></span></label>
@@ -60,28 +50,61 @@
                             </div>
                         </div>
 
-                        <div class="column is-one-third field" x-show="form.algoritmo == 'grasp'">
-                            <label class="label" for="iteraciones">Iteraciones</label>
-                            <div class="control">
-                                <input x-model.number="form.configuracionAlgoritmo.iteraciones" class="input"
-                                    type="number" id="iteraciones" name="iteraciones" min="1" max="10000" required>
+
+                        <!-- configurar multiples rondas -->
+                        <template x-if="form.algoritmo !== 'dp'">
+                            <div style="width: 100%;">
+                                <template x-for="(configRonda, i) in form.rondas" :key="i">
+                                    <div class="columns is-mobile">
+                                        <div class="column">
+                                            <button class="button is-danger is-xs" type="button"
+                                                @click="eliminarRonda(i)">x</button>
+                                        </div>
+                                        <div class="column" x-show="form.algoritmo == 'grasp'">
+                                            <label class="label" for="iteraciones">Iteraciones</label>
+                                            <div class="control">
+                                                <input x-model.number="configRonda.iteraciones" class="input"
+                                                    type="number" id="iteraciones" name="iteraciones" min="1"
+                                                    max="10000" required>
+                                            </div>
+                                        </div>
+                                        <div class="column" x-show="form.algoritmo == 'grasp'">
+                                            <label class="label" for="candidatosMax">Candidatos (Máx)</label>
+                                            <div class="control">
+                                                <input x-model.number="configRonda.candidatosMax" class="input"
+                                                    type="number" id="candidatosMax" name="candidatosMax" min="1"
+                                                    max="50" required>
+                                            </div>
+                                        </div>
+                                        <div class="column" x-show="form.algoritmo == 'grasp'">
+                                            <label class="label" for="aleatoriedad">Aleatoriedad</label>
+                                            <div class="control">
+                                                <input x-model.number="configRonda.aleatoriedad" class="input"
+                                                    type="number" id="aleatoriedad" name="aleatoriedad" min="0" max="1"
+                                                    step="0.1" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="column" x-show="form.algoritmo == 'local'">
+                                            <label class="label" for="ordenarConjuntos">Ordenar Conjuntos</label>
+                                            <div class="control">
+                                                <div class="select" style="width: 100%;">
+                                                    <select id="ordenarConjuntos" name="ordenarConjuntos"
+                                                        x-model="form.ordenarConjuntos" style="width: 100%;">
+                                                        <option value="no">No</option>
+                                                        <option value="asc">Ascendente</option>
+                                                        <option value="desc">Descendente</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr class="hr my-3">
+                                    </div>
+                                </template>
+                                <button class="button is-secondary is-sm" type="button" @click="agregarRonda()">Agregar Ronda</button>
                             </div>
-                        </div>
-                        <div class="column is-one-third field" x-show="form.algoritmo == 'grasp'">
-                            <label class="label" for="candidatosMax">Candidatos (Máx)</label>
-                            <div class="control">
-                                <input x-model.number="form.configuracionAlgoritmo.candidatosMax" class="input"
-                                    type="number" id="candidatosMax" name="candidatosMax" min="1" max="50" required>
-                            </div>
-                        </div>
-                        <div class="column is-one-third field" x-show="form.algoritmo == 'grasp'">
-                            <label class="label" for="aleatoriedad">Aleatoriedad</label>
-                            <div class="control">
-                                <input x-model.number="form.configuracionAlgoritmo.aleatoriedad" class="input"
-                                    type="number" id="aleatoriedad" name="aleatoriedad" min="0" max="1" step="0.1"
-                                    required>
-                            </div>
-                        </div>
+                        </template>
                     </fieldset>
                 </div>
 
@@ -139,8 +162,8 @@
                 </p>
 
                 <p class="control">
-                    <button @click="compararHandler()" :disabled="algoritmo == 'dp' || !problema || loading" class="button" type="button"
-                        id="retry">Comparar</button>
+                    <button @click="compararHandler()" :disabled="algoritmo == 'dp' || !problema || loading"
+                        class="button" type="button" id="retry">Comparar</button>
                 </p>
 
                 <p class="control">
@@ -149,6 +172,11 @@
                 </p>
             </div>
         </form>
+
+        <!-- Grafico -->
+        <div>
+            <canvas id="graficoResultados" class="mx-auto" style="max-width: 800px;"></canvas>
+        </div>
 
         <div class="columns is-mobile">
             <template x-if="problema">

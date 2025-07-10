@@ -96,3 +96,7 @@ Para esta implementación de GRASP se busca resolver el problema en fases:
 - Todo esto repetido para `iteraciones`.
 
 En esta segunda iteración se ve una significante mejoría en la calidad de las soluciones. El algoritmo greedy usado para armar soluciones considerando sólo los mejores candidatos.
+
+## Gráficos
+
+Para graficar las soluciones se usa chartjs. 
