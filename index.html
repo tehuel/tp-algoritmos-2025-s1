@@ -6,10 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TP Algoritmos</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-    <script src="utils.js" type="module"></script>
-    <script src="problema.js" type="module"></script>
-    <script src="set-cover-dp.js" type="module"></script>
-    <script src="set-cover-local.js" type="module"></script>
     <script src="main.js" type="module"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -75,7 +71,7 @@
                             <label class="label" for="candidatosMax">Candidatos (Máx)</label>
                             <div class="control">
                                 <input x-model.number="form.configuracionAlgoritmo.candidatosMax" class="input"
-                                    type="number" id="candidatosMax" name="candidatosMax" min="1" max="5" required>
+                                    type="number" id="candidatosMax" name="candidatosMax" min="1" max="50" required>
                             </div>
                         </div>
                         <div class="column is-one-third field" x-show="form.algoritmo == 'grasp'">
@@ -159,8 +155,8 @@
                 <div class="column">
                     <section class="section is-small is-primary">
                         <div>
-                            <strong>Universo:</strong>
-                            <span x-text="problema.universo.join(', ')"></span>
+                            <p><strong>Universo:</strong></p>
+                            <p x-text="problema.universo.join(', ')"></p>
                         </div>
                         <div>
                             <strong>Subconjuntos:</strong>
@@ -176,36 +172,38 @@
                     </section>
                 </div>
             </template>
-            <table class="table mx-auto">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Tiempo</th>
-                        <th>Resultado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <template x-for="(resultado, i) in resultados" :key="i">
+            <div class="column is-four-fifths">
+                <table class="table mx-auto">
+                    <thead>
                         <tr>
-                            <td x-text="i+1"></td>
-                            <td x-text="resultado.tiempo + ' ms'"></td>
-                            <td>
-                                <template x-for="(fila, i) in resultado.solucion" :key="i">
-                                    <pre x-text="mostrarSolucion(fila)"></pre>
-                                </template>
-                                <template x-if="!resultado.solucion.length">
-                                    <p>No se encontró solución</p>
-                                </template>
-                            </td>
+                            <th>#</th>
+                            <th>Tiempo</th>
+                            <th>Resultado</th>
                         </tr>
-                    </template>
-                    <template x-if="resultados.length === 0">
-                        <tr>
-                            <td colspan="4">No hay resultados disponibles</td>
-                        </tr>
-                    </template>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <template x-for="(resultado, i) in resultados" :key="i">
+                            <tr>
+                                <td x-text="i+1"></td>
+                                <td x-text="resultado.tiempo + ' ms'"></td>
+                                <td>
+                                    <template x-for="(fila, i) in resultado.solucion" :key="i">
+                                        <pre x-text="mostrarSolucion(fila)"></pre>
+                                    </template>
+                                    <template x-if="!resultado.solucion.length">
+                                        <p>No se encontró solución</p>
+                                    </template>
+                                </td>
+                            </tr>
+                        </template>
+                        <template x-if="resultados.length === 0">
+                            <tr>
+                                <td colspan="4">No hay resultados disponibles</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </section>
 </body>

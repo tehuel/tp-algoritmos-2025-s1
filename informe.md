@@ -69,3 +69,30 @@ Para ir mejorando la ejecucion de diferentes casos se agregaron algunas funciona
 - Exportar a CSV: para generar un archivo CSV con todas las soluciones encontradas.
 - Guardar en LocalStorage: para persistir la ultima configuración usada y que el formulario no se reinicie cada vez que se recarga la página.
 - Reorganización del formulario: para tener por separado las configuraciones del universo del problema vs las configuraciones del algoritmo.
+
+### Implementación Inicial
+
+En una implementación inicial de GRASP se consideran los siguientes parámetros:
+
+```
+iteraciones = 100, // número máximo de iteraciones del GRASP
+candidatosMax = 3, // número máximo de candidatos a eliminar en cada iteración
+aleatoriedad = 0.5, // probabilidad de seleccionar un subconjunto aleatorio
+```
+
+La implementación considera una solución inicial trivial (seleccionar todos los subconjuntos) y a partir de ahi ir seleccionando un número `candidadosMax` de subconjuntos candidatos a eliminar de la solución. Cada candidato tiene una probabilidad `aleatoriedad` de ser eliminado. Esta eliminacion de candidatos se repite `iteraciones` veces.
+
+El criterio de "calidad" con el que se avanza es la cantidad de subconjuntos elegidos como solución (una solución mejor es una solución con menor cantidad de subconjuntos).
+
+En un paso final se consulta si la solucion obtenida al finalizar las iteraciones es una solución mínima. Este chequeo siempre daba falso, las soluciones alcanzadas por esta implementacion no cumplen la condición de ser soluciones minimas, siempre tienen elementos "redundandes". Eliminando el chequeo de minimalidad la funcion devuelve soluciones, pero obviamente, no son soluciones minimas.
+
+No es una solución muy satisfactoria, por lo que se busca una alternativa.
+
+### Implementación en fases
+
+Para esta implementación de GRASP se busca resolver el problema en fases:
+- Una fase inicial de construcción de solución: Usando una estrategia greedy (seleccionando primero los subconjuntos que tengan una mayor cobertura de los elementos restantes del universo) con una probabilidad aleatoria `aleatoriedad` de no elegir el absoluto mejor, sino alguno de los `candidatosMax` mejores.
+- Una fase de búsqueda local, donde se busca eliminar subconjuntos mientras los seleccionados sigan siendo solución del problema.
+- Todo esto repetido para `iteraciones`.
+
+En esta segunda iteración se ve una significante mejoría en la calidad de las soluciones. El algoritmo greedy usado para armar soluciones considerando sólo los mejores candidatos.

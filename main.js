@@ -83,7 +83,7 @@ document.addEventListener('alpine:init', () => {
             const { universo, subconjuntos } = this.problema;
             const algoritmo = algoritmos[this.form.algoritmo];
 
-            const { resultado: solucion, tiempo } = await medirTiempo(algoritmo, universo, subconjuntos);
+            const { resultado: solucion, tiempo } = await medirTiempo(algoritmo, universo, subconjuntos, this.form.configuracionAlgoritmo);
             return {
                 solucion,
                 tiempo,
